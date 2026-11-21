@@ -20,3 +20,4 @@ buddy-proto = { path = "crates/buddy-proto" }
 buddy-ai = { path = "crates/buddy-ai" }
 buddy-agent = { path = "crates/buddy-agent" }
 buddy-anchor = { path = "crates/buddy-anchor" }
+drops-version = { path = "crates/drops-version" }

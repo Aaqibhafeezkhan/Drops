@@ -1,5 +1,5 @@
 [package]
-name = "buddyctl"
+name = "dropsctl"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -9,3 +9,4 @@ serde_json.workspace = true
 tokio.workspace = true
 clap.workspace = true
 buddy-proto.workspace = true
+drops-version.workspace = true

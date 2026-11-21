@@ -6,7 +6,7 @@ use tokio::{
     net::UnixStream,
 };
 #[derive(Parser)]
-#[command(name = "buddyctl", about = "Drops desktop companion control")]
+#[command(name = "dropsctl", version = drops_version::VERSION, long_version = drops_version::LONG_VERSION, about = "Drops desktop companion control")]
 struct Args {
     #[command(subcommand)]
     command: Action,
@@ -112,7 +112,7 @@ async fn main() -> Result<()> {
             );
             return Ok(());
         }
-        Err(e) => return Err(e).context("Drops daemon unavailable; start buddyd"),
+        Err(e) => return Err(e).context("Drops backend unavailable; start dropsd"),
     };
     let (read, mut write) = stream.into_split();
     let mut lines = BufReader::new(read).lines();
