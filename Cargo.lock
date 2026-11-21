@@ -168,36 +168,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "buddyctl"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "buddy-proto",
- "clap",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "buddyd"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "buddy-agent",
- "buddy-ai",
- "buddy-anchor",
- "buddy-proto",
- "clap",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tokio-util",
- "toml",
- "uuid",
-]
-
-[[package]]
 name = "bumpalo"
 version = "3.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -402,6 +372,42 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.9",
+]
+
+[[package]]
+name = "drops-version"
+version = "0.1.0"
+
+[[package]]
+name = "dropsctl"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "buddy-proto",
+ "clap",
+ "drops-version",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "dropsd"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "buddy-agent",
+ "buddy-ai",
+ "buddy-anchor",
+ "buddy-proto",
+ "clap",
+ "drops-version",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-util",
+ "toml",
+ "uuid",
 ]
 
 [[package]]

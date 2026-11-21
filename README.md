@@ -21,47 +21,49 @@ This installs Drops under `~/.local` and enables a small native widget in the Om
 - **⚙** in the panel header opens **Model settings**. A segmented provider control switches between **Custom endpoint** and **Opencode Go**. **Custom endpoint** (the default) keeps the original bring-your-own OpenAI-compatible setup: paste the endpoint URL, enter the model name and, optionally, the name of an environment variable that holds the key. **Opencode Go** asks for an Opencode Go API key, loads the gateway's model list, and lets you pick a model. The capture options and a pinned **Save connection** action stay in reach while the settings body scrolls. Each drop sends its own stable session id, as the gateway recommends for routing and prompt caching. A missing config is supported for first-run setup.
 - **Sudo mode** runs mutating and dangerous tools without a per-call approval prompt. Validation, workspace confinement, diff previews and backups still apply, and shell access still depends on the anchored window. It starts off, is saved across restarts, and its switch turns amber while enabled.
 
-Click a placed drop to open its in-place chat bubble. It greets the anchored window, offers contextual quick actions, and grows into a scrollable conversation. Sending collapses the bubble; the reply returns as a short, truncated bubble above the drop, and clicking it or the drop reopens the full conversation. Idle drops shrink to colored dots. Click the anchor label to inspect context; Enter sends, Escape closes, and the stop icon cancels the current turn. The context inspector closes with its **×** button or Escape, and hiding the panel closes it too. `buddyctl cancel` stops all turns.
+Click a placed drop to open its in-place chat bubble. It greets the anchored window, offers contextual quick actions, and grows into a scrollable conversation. Sending collapses the bubble; the reply returns as a short, truncated bubble above the drop, and clicking it or the drop reopens the full conversation. Idle drops shrink to colored dots. Click the anchor label to inspect context; Enter sends, Escape closes, and the stop icon cancels the current turn. The context inspector closes with its **×** button or Escape, and hiding the panel closes it too. `dropsctl cancel` stops all turns.
 
 Reasoning from thinking models streams into one compact, scrollable block instead of the chat itself: it starts collapsed with a word count, expands on click, and can be hidden or shown expanded by default with `[appearance].thinking_mode` (`"collapsed"`, `"hidden"`, or `"shown"`).
 
 `./install.sh` without the widget flag installs the standalone launcher only; run `drops` to toggle its panel. `PREFIX` overrides the install prefix. Existing Drops configuration is preserved; widget updates are backed up outside the plugin discovery directory. The optional Waybar example remains available. The installer makes no Hyprland, autostart, or systemd changes.
 
-For development, run `mise exec -- cargo build --workspace`, then `target/debug/buddyd` and `DROPS_CTL="$PWD/target/debug/buddyctl" quickshell -p ui/shell.qml`. Configuration files are optional; advanced settings such as `project_dir`, capabilities and external tools are illustrated in `examples/config.toml`.
+For development, run `mise exec -- cargo build --workspace`, then `target/debug/dropsd` and `DROPS_CTL="$PWD/target/debug/dropsctl" quickshell -p ui/shell.qml`. Configuration files are optional; advanced settings such as `project_dir`, capabilities and external tools are illustrated in `examples/config.toml`.
 
 ## Control
 
+The installed command names are `drops`, `dropsctl` and `dropsd`. The original `buddyctl` and `buddyd` executable names remain available for compatibility. All three new commands support `--version`; the panel shows the same build version and source commit when available. Session exports include version metadata.
+
 ```sh
-buddyctl status
-buddyctl toggle
-buddyctl create --appearance cat
-buddyctl style BLOB_ID sprout
-buddyctl sudo on                # off restores per-call approval
-buddyctl lively on              # off restores quiet mode
-buddyctl configure http://localhost:11434/v1 MODEL_NAME
-OPENCODE_API_KEY=... buddyctl configure https://opencode.ai/zen/go/v1 MODEL --mode opencode-go
-OPENCODE_API_KEY=... buddyctl models # list models; a key saved in settings also works
-buddyctl drop 300 200
-buddyctl send BLOB_ID 'What is open here?'
-buddyctl context BLOB_ID
-buddyctl directory BLOB_ID /absolute/path/to/folder
-buddyctl directory BLOB_ID        # restore automatic detection
-buddyctl confirm BLOB_ID          # --deny rejects
-buddyctl cancel                  # global kill switch
-buddyctl export BLOB_ID > session.json
-buddyctl clear BLOB_ID
-buddyctl fork BLOB_ID
-buddyctl remove BLOB_ID
-buddyctl watch
+dropsctl status
+dropsctl toggle
+dropsctl create --appearance cat
+dropsctl style BLOB_ID sprout
+dropsctl sudo on                # off restores per-call approval
+dropsctl lively on              # off restores quiet mode
+dropsctl configure http://localhost:11434/v1 MODEL_NAME
+OPENCODE_API_KEY=... dropsctl configure https://opencode.ai/zen/go/v1 MODEL --mode opencode-go
+OPENCODE_API_KEY=... dropsctl models # list models; a key saved in settings also works
+dropsctl drop 300 200
+dropsctl send BLOB_ID 'What is open here?'
+dropsctl context BLOB_ID
+dropsctl directory BLOB_ID /absolute/path/to/folder
+dropsctl directory BLOB_ID        # restore automatic detection
+dropsctl confirm BLOB_ID          # --deny rejects
+dropsctl cancel                  # global kill switch
+dropsctl export BLOB_ID > session.json
+dropsctl clear BLOB_ID
+dropsctl fork BLOB_ID
+dropsctl remove BLOB_ID
+dropsctl watch
 ```
 
-`DROPS_SOCKET` overrides the socket path (default `$XDG_RUNTIME_DIR/drops.sock`). If `XDG_RUNTIME_DIR` is absent, an explicit private `DROPS_SOCKET` path is required. `buddyd --config PATH --data-dir PATH --headless` supports isolated development without desktop access. Headless anchors are explicitly synthetic workspaces and have no shell capability.
+`DROPS_SOCKET` overrides the socket path (default `$XDG_RUNTIME_DIR/drops.sock`). If `XDG_RUNTIME_DIR` is absent, an explicit private `DROPS_SOCKET` path is required. `dropsd --config PATH --data-dir PATH --headless` supports isolated development without desktop access. Headless anchors are explicitly synthetic workspaces and have no shell capability.
 
-The socket uses newline-delimited JSON and mode 0600. `buddyctl bridge` connects stdin/stdout bidirectionally for the QML shell. `docs/contracts.md` describes crate boundaries. Sessions and blob metadata live under `$XDG_DATA_HOME/drops` (default `~/.local/share/drops`). A custom endpoint reads its key from the environment variable named by `api_key_env`. Opencode Go accepts `OPENCODE_API_KEY` too; a key entered in settings is stored only in the Drops config file, which is written with mode 0600 and is never included in UI state or logs. The settings screen masks it, and leaving the field blank keeps the saved key.
+The socket uses newline-delimited JSON and mode 0600. `dropsctl bridge` connects stdin/stdout bidirectionally for the QML shell. `docs/contracts.md` describes crate boundaries. Sessions and blob metadata live under `$XDG_DATA_HOME/drops` (default `~/.local/share/drops`). A custom endpoint reads its key from the environment variable named by `api_key_env`. Opencode Go accepts `OPENCODE_API_KEY` too; a key entered in settings is stored only in the Drops config file, which is written with mode 0600 and is never included in UI state or logs. The settings screen masks it, and leaving the field blank keeps the saved key.
 
 ## Working with the anchored app
 
-Each message refreshes `working_context`: current directory, repository root/name, common project manifest names, detection source and any ambiguity. `tool_workspace` records the actual file-tool boundary. A compact `brief` condenses the current anchor/window, workspace and local-document evidence, with explicit freshness, ambiguity and missing-content cues and a likely verification hint from the detected manifest. It is built only from evidence already gathered for that turn. The context inspector and `buddyctl context BLOB_ID` show the brief. Older context snapshots stay in the exported JSONL but are not replayed to the model when a fresh bundle exists, so a previous window or directory cannot dominate a follow-up request.
+Each message refreshes `working_context`: current directory, repository root/name, common project manifest names, detection source and any ambiguity. `tool_workspace` records the actual file-tool boundary. A compact `brief` condenses the current anchor/window, workspace and local-document evidence, with explicit freshness, ambiguity and missing-content cues and a likely verification hint from the detected manifest. It is built only from evidence already gathered for that turn. The context inspector and `dropsctl context BLOB_ID` show the brief. Older context snapshots stay in the exported JSONL but are not replayed to the model when a fresh bundle exists, so a previous window or directory cannot dominate a follow-up request.
 
 - **Terminals:** Alacritty, Kitty, Foot, Ghostty, WezTerm, GNOME Terminal/Console/Ptyxis, Konsole, Tilix, Xfce Terminal, XTerm and other recognized terminals are supported. Drops inspects only the anchored process and its bounded descendant tree, preferring foreground processes with a terminal and falling back to a unique shell directory. A shell `cd` is picked up on the next message. Multiple different tab/pane directories remain ambiguous.
 - **tmux:** when exactly one client belongs to that window, Drops asks the default tmux server for that client's active pane directory. Custom tmux sockets and ambiguous client matches currently fall back without guessing.

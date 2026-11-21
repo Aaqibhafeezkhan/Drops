@@ -1,5 +1,5 @@
 [package]
-name = "buddyd"
+name = "dropsd"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -17,3 +17,4 @@ buddy-ai.workspace = true
 buddy-agent.workspace = true
 buddy-anchor.workspace = true
 reqwest.workspace = true
+drops-version.workspace = true

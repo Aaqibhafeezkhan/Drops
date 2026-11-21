@@ -20,7 +20,7 @@ use tokio::{
 };
 use tokio_util::sync::CancellationToken;
 #[derive(Parser)]
-#[command(about = "Drops desktop companion daemon")]
+#[command(name = "dropsd", version = drops_version::VERSION, long_version = drops_version::LONG_VERSION, about = "Drops desktop companion daemon")]
 struct Args {
     #[arg(long)]
     config: Option<PathBuf>,
@@ -98,6 +98,7 @@ fn public_snapshot(snapshot: &Snapshot) -> Value {
             }
         }
     }
+    state["app_version"] = json!(drops_version::LONG_VERSION);
     state
 }
 fn default_dir(env: &str, suffix: &str) -> PathBuf {
@@ -649,7 +650,7 @@ async fn handle(cmd: Command, app: &Shared) -> Result<Value> {
             } else {
                 String::new()
             };
-            return Ok(json!({"type":"export","jsonl":content}));
+            return Ok(json!({"type":"export","version":drops_version::LONG_VERSION,"jsonl":content}));
         }
         Command::Clear { id } => {
             let i = a.index(&id)?;

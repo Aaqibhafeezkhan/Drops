@@ -176,7 +176,7 @@ ShellRoot {
         return "#9fbf8f"
     }
     function heroStatus(blob) {
-        if(!root.connected)return "Reconnecting to buddyd"
+        if(!root.connected)return "Reconnecting to Drops backend"
         if(!blob)return "Create a drop to begin"
         const caption=root.stateCaption(blob)
         if(caption)return caption
@@ -474,7 +474,7 @@ ShellRoot {
                 } catch(e) { root.failure=String(e) }
             }
         }
-        onExited: { root.connected=false;root.dragging=false;root.settling=false;root.pointerPending=false;root.failure="Start buddyd to connect." }
+        onExited: { root.connected=false;root.dragging=false;root.settling=false;root.pointerPending=false;root.failure="Start the Drops backend (dropsd) to connect." }
     }
     Timer { interval:2000; repeat:true; running:!bridge.running; onTriggered:bridge.running=true }
     Timer {id:motionWarmup;interval:32;onTriggered:root.skipMotion=false}
@@ -1355,7 +1355,7 @@ ShellRoot {
                         Label {
                             Layout.fillWidth:true;elide:Text.ElideRight;font.pixelSize:9
                             color:root.failure ? "#f4a99a" : root.muted
-                            text:root.failure ? root.failure : !root.connected ? "Reconnecting to buddyd" : root.hasModel ? "Connected · "+root.modelLabel() : "No model configured"
+                            text:root.failure ? root.failure : !root.connected ? "Reconnecting to Drops backend" : root.hasModel ? "Connected · "+root.modelLabel() : "No model configured"
                             MouseArea {id:statusHover;anchors.fill:parent;hoverEnabled:true;acceptedButtons:Qt.NoButton}
                             ToolTip.visible:statusHover.containsMouse && !!root.failure;ToolTip.text:root.failure
                         }
@@ -1806,6 +1806,17 @@ ShellRoot {
                             id:visionMode
                             Layout.fillWidth:true
                             text:"Model supports images"
+                        }
+                    }
+                    PanelCard {
+                        Layout.fillWidth:true
+                        SectionLabel {text:"About";Layout.fillWidth:true}
+                        Label {
+                            Layout.fillWidth:true
+                            text:"Drops "+String(root.state.app_version || "version unavailable")
+                            color:root.muted
+                            font.pixelSize:10
+                            wrapMode:Text.Wrap
                         }
                     }
                 }

@@ -11,7 +11,9 @@ else
   cargo build --release --locked
 fi
 install -d "$prefix/bin" "$prefix/share/drops/ui" "$prefix/share/drops/examples"
-install -m 755 target/release/buddyd target/release/buddyctl "$prefix/bin/"
+install -m 755 target/release/dropsd target/release/dropsctl "$prefix/bin/"
+ln -sfn dropsd "$prefix/bin/buddyd"
+ln -sfn dropsctl "$prefix/bin/buddyctl"
 install -m 755 scripts/drops "$prefix/bin/drops"
 install -m 644 ui/*.qml "$prefix/share/drops/ui/"
 install -m 644 examples/* "$prefix/share/drops/examples/"
